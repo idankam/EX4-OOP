@@ -13,44 +13,27 @@ import pygame
 from pygame import *
 from client_python.GraphAlgo import GraphAlgo
 from client_python.Pokemon import *
-
+from client_python.Game import Game
 
 # init pygame
 WIDTH, HEIGHT = 1080, 720
 
-# default port
-PORT = 6666
-# server host (default localhost 127.0.0.1)
-HOST = '127.0.0.1'
 pygame.init()
-
 screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
 clock = pygame.time.Clock()
 pygame.font.init()
-
-#remove at the end!
-
-# p = subprocess.Popen(["java -jar Ex4_Server_v0.0.jar 0"], cwd=r"C:\Users\idank\PycharmProjects\EX4-OOP")
-# p.wait()
-# os.system()
-client = Client()
-client.start_connection(HOST, PORT)
-
-
 FONT = pygame.font.SysFont('Arial', 20, bold=True)
-# load the json string into SimpleNamespace Object
 
-graph_json = client.get_graph()
+game = Game()
+
+graph_json = game.client.get_graph()
 graph_dict = json.loads(
     graph_json, object_hook=lambda json_dict: SimpleNamespace(**json_dict))
-graphA = GraphAlgo()
-print(graphA.load_from_json(graph_json))
-print(graphA.get_graph())
+# graphA = GraphAlgo()
+# print(graphA.load_from_json(graph_json))
+# print(graphA.get_graph())
 
-pokemons = client.get_pokemons()
-# pokemons_obj = json.loads(pokemons, object_hook=lambda d: SimpleNamespace(**d))
-print(pokemons)
-print(get_pokemon_objects(pokemons, graphA.get_graph()))
+
 
 for n in graph_dict.Nodes:
     x, y, _ = n.pos.split(',')
@@ -82,29 +65,28 @@ def my_scale(data, x=False, y=False):
 
 radius = 15
 
-client.add_agent("{\"id\":0}")
-client.add_agent("{\"id\":1}")
-client.add_agent("{\"id\":2}")
-client.add_agent("{\"id\":3}")
+
+# client.add_agent("{\"id\":1}")
+# client.add_agent("{\"id\":2}")
+# client.add_agent("{\"id\":3}")
 
 # this commnad starts the server - the game is running now
-client.start()
+
 
 """
 The code below should be improved significantly:
 The GUI and the "algo" are mixed - refactoring using MVC design pattern is required.
 """
 
-while client.is_running() == 'true':
-    pokemons = json.loads(client.get_pokemons(),
+while game.client.is_running() == 'true':
+    pokemons = json.loads(game.client.get_pokemons(),
                           object_hook=lambda d: SimpleNamespace(**d)).Pokemons
     pokemons = [p.Pokemon for p in pokemons]
     for p in pokemons:
         x, y, _ = p.pos.split(',')
         p.pos = SimpleNamespace(x=my_scale(
             float(x), x=True), y=my_scale(float(y), y=True))
-    print(client.get_agents())
-    agents = json.loads(client.get_agents(),
+    agents = json.loads(game.client.get_agents(),
                         object_hook=lambda d: SimpleNamespace(**d)).Agents
     agents = [agent.Agent for agent in agents]
     for a in agents:
@@ -167,15 +149,18 @@ while client.is_running() == 'true':
     clock.tick(10)
 
     # choose next edge
-    for agent in agents:
-        if agent.dest == -1:
-            next_node = (agent.src - 1) % len(graph_dict.Nodes)
-            client.choose_next_edge(
-                '{"agent_id":'+str(agent.id)+', "next_node_id":'+str(next_node)+'}')
-            ttl = client.time_to_end()
-            print(ttl, client.get_info())
+    game.update_game_info()
+    game.update_dest_for_agents()
 
-    client.move()
+    # for agent in agents:
+    #     if agent.dest == -1:
+    #         next_node = (agent.src - 1) % len(graph_dict.Nodes)
+    #         client.choose_next_edge(
+    #             '{"agent_id":'+str(agent.id)+', "next_node_id":'+str(next_node)+'}')
+    #         ttl = client.time_to_end()
+    #         print(ttl, client.get_info())
+    #
+    # client.move()
 
 
 
