@@ -3,12 +3,17 @@
 OOP - Ex4
 Very simple GUI example for python client to communicates with the server and "play the game!"
 """
+import subprocess
+import os
 from types import SimpleNamespace
 from client import Client
 import json
 from pygame import gfxdraw
 import pygame
 from pygame import *
+from client_python.GraphAlgo import GraphAlgo
+from client_python.Pokemon import *
+
 
 # init pygame
 WIDTH, HEIGHT = 1080, 720
@@ -23,31 +28,39 @@ screen = display.set_mode((WIDTH, HEIGHT), depth=32, flags=RESIZABLE)
 clock = pygame.time.Clock()
 pygame.font.init()
 
+#remove at the end!
+
+# p = subprocess.Popen(["java -jar Ex4_Server_v0.0.jar 0"], cwd=r"C:\Users\idank\PycharmProjects\EX4-OOP")
+# p.wait()
+# os.system()
 client = Client()
 client.start_connection(HOST, PORT)
 
-pokemons = client.get_pokemons()
-pokemons_obj = json.loads(pokemons, object_hook=lambda d: SimpleNamespace(**d))
-
-print(pokemons)
-
-graph_json = client.get_graph()
 
 FONT = pygame.font.SysFont('Arial', 20, bold=True)
 # load the json string into SimpleNamespace Object
 
-graph = json.loads(
+graph_json = client.get_graph()
+graph_dict = json.loads(
     graph_json, object_hook=lambda json_dict: SimpleNamespace(**json_dict))
+graphA = GraphAlgo()
+print(graphA.load_from_json(graph_json))
+print(graphA.get_graph())
 
-for n in graph.Nodes:
+pokemons = client.get_pokemons()
+# pokemons_obj = json.loads(pokemons, object_hook=lambda d: SimpleNamespace(**d))
+print(pokemons)
+print(get_pokemon_objects(pokemons, graphA.get_graph()))
+
+for n in graph_dict.Nodes:
     x, y, _ = n.pos.split(',')
     n.pos = SimpleNamespace(x=float(x), y=float(y))
 
  # get data proportions
-min_x = min(list(graph.Nodes), key=lambda n: n.pos.x).pos.x
-min_y = min(list(graph.Nodes), key=lambda n: n.pos.y).pos.y
-max_x = max(list(graph.Nodes), key=lambda n: n.pos.x).pos.x
-max_y = max(list(graph.Nodes), key=lambda n: n.pos.y).pos.y
+min_x = min(list(graph_dict.Nodes), key=lambda n: n.pos.x).pos.x
+min_y = min(list(graph_dict.Nodes), key=lambda n: n.pos.y).pos.y
+max_x = max(list(graph_dict.Nodes), key=lambda n: n.pos.x).pos.x
+max_y = max(list(graph_dict.Nodes), key=lambda n: n.pos.y).pos.y
 
 
 def scale(data, min_screen, max_screen, min_data, max_data):
@@ -107,7 +120,7 @@ while client.is_running() == 'true':
     screen.fill(Color(0, 0, 0))
 
     # draw nodes
-    for n in graph.Nodes:
+    for n in graph_dict.Nodes:
         x = my_scale(n.pos.x, x=True)
         y = my_scale(n.pos.y, y=True)
 
@@ -123,10 +136,10 @@ while client.is_running() == 'true':
         screen.blit(id_srf, rect)
 
     # draw edges
-    for e in graph.Edges:
+    for e in graph_dict.Edges:
         # find the edge nodes
-        src = next(n for n in graph.Nodes if n.id == e.src)
-        dest = next(n for n in graph.Nodes if n.id == e.dest)
+        src = next(n for n in graph_dict.Nodes if n.id == e.src)
+        dest = next(n for n in graph_dict.Nodes if n.id == e.dest)
 
         # scaled positions
         src_x = my_scale(src.pos.x, x=True)
@@ -150,16 +163,20 @@ while client.is_running() == 'true':
     display.update()
 
     # refresh rate
-    clock.tick(60)
+    clock.tick(10)
 
     # choose next edge
     for agent in agents:
         if agent.dest == -1:
-            next_node = (agent.src - 1) % len(graph.Nodes)
+            next_node = (agent.src - 1) % len(graph_dict.Nodes)
             client.choose_next_edge(
                 '{"agent_id":'+str(agent.id)+', "next_node_id":'+str(next_node)+'}')
             ttl = client.time_to_end()
             print(ttl, client.get_info())
 
     client.move()
+
+
+
+
 # game over:
