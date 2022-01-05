@@ -34,12 +34,11 @@ graph_dict = json.loads(
 # print(graphA.get_graph())
 
 
-
 for n in graph_dict.Nodes:
     x, y, _ = n.pos.split(',')
     n.pos = SimpleNamespace(x=float(x), y=float(y))
 
- # get data proportions
+# get data proportions
 min_x = min(list(graph_dict.Nodes), key=lambda n: n.pos.x).pos.x
 min_y = min(list(graph_dict.Nodes), key=lambda n: n.pos.y).pos.y
 max_x = max(list(graph_dict.Nodes), key=lambda n: n.pos.x).pos.x
@@ -51,7 +50,7 @@ def scale(data, min_screen, max_screen, min_data, max_data):
     get the scaled data with proportions min_data, max_data
     relative to min and max screen dimentions
     """
-    return ((data - min_data) / (max_data-min_data)) * (max_screen - min_screen) + min_screen
+    return ((data - min_data) / (max_data - min_data)) * (max_screen - min_screen) + min_screen
 
 
 # decorate scale with the correct values
@@ -60,11 +59,10 @@ def my_scale(data, x=False, y=False):
     if x:
         return scale(data, 50, screen.get_width() - 50, min_x, max_x)
     if y:
-        return scale(data, 50, screen.get_height()-50, min_y, max_y)
+        return scale(data, 50, screen.get_height() - 50, min_y, max_y)
 
 
 radius = 15
-
 
 # client.add_agent("{\"id\":1}")
 # client.add_agent("{\"id\":2}")
@@ -148,21 +146,17 @@ while game.client.is_running() == 'true':
     # refresh rate
     clock.tick(10)
 
+    # print("here!!!")
     # choose next edge
-    game.update_game_info()
-    game.update_dest_for_agents()
+    try:
+        game.update_game_info()
+    except Exception:
+        print("there is no pokemons now")
 
-    # for agent in agents:
-    #     if agent.dest == -1:
-    #         next_node = (agent.src - 1) % len(graph_dict.Nodes)
-    #         client.choose_next_edge(
-    #             '{"agent_id":'+str(agent.id)+', "next_node_id":'+str(next_node)+'}')
-    #         ttl = client.time_to_end()
-    #         print(ttl, client.get_info())
-    #
-    # client.move()
-
-
+    # try:
+    game.update_dest_for_agents2()
+    # except Exception:
+    #     # game.update_dest_for_agents()
 
 
 # game over:

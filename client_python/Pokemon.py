@@ -1,4 +1,5 @@
 import json
+import math
 
 from client_python.DiGraph import DiGraph
 from client_python.Location import Location
@@ -57,7 +58,7 @@ class Pokemon:
         m = (dstNode.pos.y - srcNode.pos.y) / (dstNode.pos.x - srcNode.pos.x)
         a = dstNode.pos.y - m * dstNode.pos.x
 
-        if self.pos.x * m + a == self.pos.y:
+        if math.isclose(self.pos.x * m + a, self.pos.y):
             return True
         else:
             return False
