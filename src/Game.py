@@ -65,8 +65,9 @@ class Game:
                         distance, nodes_list = self.graphAlgo.shortest_path(agent.src, pokemon_src)
 
                         if distance == 0:
-                            distance = self.graphAlgo.get_graph().Edges.get(
-                                str(pokemon_src) + "," + str(pokemon_dest)).weight
+                            distance = 0.00005
+                            # distance = self.graphAlgo.get_graph().Edges.get(
+                            #     str(pokemon_src) + "," + str(pokemon_dest)).weight
                             next_node = pokemon_dest
                         else:
                             next_node = nodes_list[1]
