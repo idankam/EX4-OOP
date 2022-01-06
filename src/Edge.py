@@ -1,7 +1,3 @@
-# from client_python.DiGraph import DiGraph
-from src.Location import Location
-
-
 class Edge:
 
     def __init__(self, src, w, dest):

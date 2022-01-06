@@ -1,5 +1,5 @@
 import json
-from src.Location import Location
+from Location import Location
 
 
 def get_agents_objects(json_string):

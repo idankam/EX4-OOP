@@ -1,9 +1,9 @@
 import sys
 import numpy
-from src.GraphAlgo import GraphAlgo
-from src.Pokemon import get_pokemon_objects
-from src.Agent import get_agents_objects
-from client_python.client import Client
+from GraphAlgo import GraphAlgo
+from Pokemon import get_pokemon_objects
+from Agent import get_agents_objects
+from client import Client
 
 # default port
 PORT = 6666

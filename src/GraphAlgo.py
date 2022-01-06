@@ -2,19 +2,9 @@ import sys
 from typing import List
 from DiGraph import DiGraph
 from GraphAlgoInterface import GraphAlgoInterface
-from src.GraphInterface import GraphInterface
-from Node import Node
+
 from PriorityQueue import PriorityQueue
 import json
-import random
-from Edge import Edge
-
-
-# from GraphToDisplay import NodeToDisplay
-# from GraphToDisplay import GraphToDisplay
-
-# from graph_gui import *
-# from src.graph_gui import Gui
 
 
 def checkIfAllBlack(graph) -> bool:

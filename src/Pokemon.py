@@ -1,9 +1,9 @@
 import json
 import math
 
-from src.DiGraph import DiGraph
-from src.Location import Location
-from src.Edge import Edge
+from DiGraph import DiGraph
+from Location import Location
+
 
 
 def get_pokemon_objects(json_string, graph):

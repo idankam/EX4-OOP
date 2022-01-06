@@ -1,20 +1,10 @@
-"""
-@author AchiyaZigi
-OOP - Ex4
-Very simple GUI example for python client to communicates with the server and "play the game!"
-"""
-import random
-import subprocess
-import os
+
 from types import SimpleNamespace
-from client_python.client import Client
-import json
 from pygame import gfxdraw
 import pygame
 from pygame import *
-from src.GraphAlgo import GraphAlgo
-from src.Pokemon import *
-from src.Game import Game
+from Pokemon import *
+from Game import Game
 from Location import Location
 
 def run():
