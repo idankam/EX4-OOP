@@ -1,13 +1,8 @@
 import sys
-from operator import length_hint
-from itertools import chain, combinations
-import random
-
 import numpy
-from client_python.Pokemon import *
-from client_python.GraphAlgo import GraphAlgo
-from client_python.Pokemon import get_pokemon_objects
-from client_python.Agent import get_agents_objects
+from src.GraphAlgo import GraphAlgo
+from src.Pokemon import get_pokemon_objects
+from src.Agent import get_agents_objects
 from client_python.client import Client
 
 # default port
@@ -28,8 +23,6 @@ class Game:
         self.pokemons_list = get_pokemon_objects(self.client.get_pokemons(), self.graphAlgo.get_graph())
         self.add_agents_to_game()
         self.agents_list = get_agents_objects(self.client.get_agents())
-        self.pokemon_allocated = {}
-        self.agents_waze = {}
         self.client.start()
 
     def update_game_info(self):
@@ -45,19 +38,6 @@ class Game:
             s = self.client.add_agent(send)
             rand = numpy.random.randint(0, len(ids) - 1)
             center = ids[rand]
-
-    # def add_agents_to_game(self):
-    #     ids = list(self.graphAlgo.get_graph().Nodes.keys())
-    #     # for node in self.graphAlgo.get_graph().Nodes.keys:
-    #     #     ids.append(node.id)
-    #
-    #     i = 0
-    #     s = "true"
-    #     while s == "true":
-    #         i = ids[numpy.random.randint(0,len(ids)-1)]
-    #         send = '{\"id\":' + str(i) + '}'
-    #         s = self.client.add_agent(send)
-    #        # i += 1
 
     def update_dest_value_per_second(self):
         if self.pokemons_list is None:
@@ -93,7 +73,6 @@ class Game:
 
                         value_per_second = float(pokemon.value) / (distance / agent.speed)
 
-                        print((value_per_second, best_agent_value_per_second))
                         if best_agent_value_per_second < value_per_second:
                             best_agent = agent
                             best_agent_id = agent.id
@@ -102,7 +81,6 @@ class Game:
                             best_pokemon = pokemon
                 self.pokemons_list.remove(best_pokemon)
                 self.agents_list.remove(best_agent)
-                self.pokemon_allocated[best_agent.id] = best_pokemon.pos.__str__()
                 self.client.choose_next_edge(
                     '{"agent_id":' + str(best_agent_id) + ', "next_node_id":' + str(best_agent_next_node) + '}')
             self.client.move()

@@ -1,9 +1,9 @@
 import json
 import math
 
-from client_python.DiGraph import DiGraph
-from client_python.Location import Location
-from client_python.Edge import Edge
+from src.DiGraph import DiGraph
+from src.Location import Location
+from src.Edge import Edge
 
 
 def get_pokemon_objects(json_string, graph):
@@ -42,7 +42,6 @@ class Pokemon:
         return None
 
     def getNode(self, graph):
-        print(graph.Nodes)
         for ID, node in graph.Nodes.items():
             if (node.pos.x == self.pos.x) and (node.pos.y == self.pos.y):
                 return ID

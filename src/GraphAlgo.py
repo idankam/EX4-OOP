@@ -2,7 +2,7 @@ import sys
 from typing import List
 from DiGraph import DiGraph
 from GraphAlgoInterface import GraphAlgoInterface
-from client_python.GraphInterface import GraphInterface
+from src.GraphInterface import GraphInterface
 from Node import Node
 from PriorityQueue import PriorityQueue
 import json

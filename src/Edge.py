@@ -1,5 +1,5 @@
 # from client_python.DiGraph import DiGraph
-from client_python.Location import Location
+from src.Location import Location
 
 
 class Edge:

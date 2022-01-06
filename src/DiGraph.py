@@ -1,7 +1,7 @@
 from GraphInterface import GraphInterface
-from client_python.Edge import Edge
-from client_python.Node import Node
-from client_python.Location import Location
+from src.Edge import Edge
+from src.Node import Node
+from src.Location import Location
 
 
 class DiGraph(GraphInterface):

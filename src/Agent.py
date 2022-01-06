@@ -1,10 +1,9 @@
 import json
-from client_python.Location import Location
+from src.Location import Location
 
 
 def get_agents_objects(json_string):
     agents_list = []
-    print(json_string)
     json_dict = json.loads(json_string)
 
     for agent_dict in json_dict['Agents']:
