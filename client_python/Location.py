@@ -20,7 +20,7 @@ class Location:
 
     # distance
     def distance(self, another_loc):
-        dist = ((self.x - another_loc.x) ^ 2 + (self.y - another_loc.y) ^ 2 + (self.z - another_loc.z) ^ 2) ^ 0.5
+        dist = pow((pow((self.x - another_loc.x) , 2) + pow((self.y - another_loc.y) , 2) + pow((self.z - another_loc.z) , 2)) , 0.5)
         return dist
 
     def __str__(self):
