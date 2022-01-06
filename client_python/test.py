@@ -154,7 +154,8 @@ while game.client.is_running() == 'true':
         print("there is no pokemons now")
 
     # try:
-    game.update_dest_for_agents2()
+    game.update_dest_for_agents_by_tsp_test()
+    # game.update_dest_value_per_second()
     # except Exception:
     #     # game.update_dest_for_agents()
 

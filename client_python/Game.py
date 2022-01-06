@@ -1,6 +1,6 @@
 import sys
 from operator import length_hint
-
+from itertools import chain, combinations
 import numpy
 from client_python.Pokemon import *
 from client_python.GraphAlgo import GraphAlgo
@@ -20,30 +20,100 @@ class Game:
 
         self.client = Client()
         self.client.start_connection(HOST, PORT)
-
         self.graphAlgo = GraphAlgo()
         graph_json = self.client.get_graph()
         self.graphAlgo.load_from_json(graph_json)
-
         self.pokemons_list = get_pokemon_objects(self.client.get_pokemons(), self.graphAlgo.get_graph())
+        self.add_agents_to_game()
+        self.agents_list = get_agents_objects(self.client.get_agents())
+        self.pokemon_allocated = {}
+        self.agents_waze = {}
+        self.client.start()
 
+    def update_game_info(self):
+        self.pokemons_list = get_pokemon_objects(self.client.get_pokemons(), self.graphAlgo.get_graph())
+        self.agents_list = get_agents_objects(self.client.get_agents())
+
+    def add_agents_to_game(self):
         i = 0
         s = "true"
         while s == "true":
             send = '{\"id\":' + str(i) + '}'
             s = self.client.add_agent(send)
             i += 1
-        self.agents_list = get_agents_objects(self.client.get_agents())
-        self.client.start()
-        # print("here!")
-        # print(self.client.get_agents())
-        # self.add_agents_to_game()
 
-    def update_game_info(self):
-        self.pokemons_list = get_pokemon_objects(self.client.get_pokemons(), self.graphAlgo.get_graph())
-        self.agents_list = get_agents_objects(self.client.get_agents())
+    def update_dest_value_per_second(self):
+        if self.pokemons_list is None:
+            self.client.move()
+        else:
 
-    def update_dest_for_agents_by_biggest_value(self):
+            # agent_to_remove = []
+            # for agent in self.agents_list:
+            #     if agent.dest != -1:
+            #         agent_to_remove.append(agent)
+            #
+            # for agent in agent_to_remove:
+            #     self.agents_list.remove(agent)
+            #
+            # pokemon_to_remove = []
+            # for pokemon in self.pokemons_list:
+            #     if pokemon.pos.__str__() in self.pokemon_allocated.values():
+            #         pokemon_to_remove.append(pokemon)
+            #
+            # for pokemon in pokemon_to_remove:
+            #     self.pokemons_list.remove(pokemon)
+
+            time_flag = True
+
+            while (len(self.pokemons_list) > 0) and (len(self.agents_list) > 0) and time_flag:
+
+                best_agent = None
+                best_agent_id = -1
+                best_agent_value_per_second = -sys.maxsize - 1
+                best_agent_next_node = -1
+                best_pokemon = None
+
+                for pokemon in self.pokemons_list:
+                    for agent in self.agents_list:
+
+                        pokemon_src = pokemon.node
+                        pokemon_dest = pokemon_src
+                        if pokemon_src is None:
+                            pokemon_src = int(pokemon.edge.split(',')[0])
+                            pokemon_dest = int(pokemon.edge.split(',')[1])
+
+                        distance, nodes_list = self.graphAlgo.shortest_path(agent.src, pokemon_src)
+
+                        if distance == 0:
+                            distance = self.graphAlgo.get_graph().Edges.get(
+                                str(pokemon_src) + "," + str(pokemon_dest)).weight
+                            next_node = pokemon_dest
+                        else:
+                            next_node = nodes_list[1]
+
+                        value_per_second = float(pokemon.value) / (distance / agent.speed)
+
+                        print((value_per_second, best_agent_value_per_second))
+                        if best_agent_value_per_second < value_per_second:
+                            best_agent = agent
+                            best_agent_id = agent.id
+                            best_agent_value_per_second = value_per_second
+                            best_agent_next_node = next_node
+                            best_pokemon = pokemon
+
+                print("best pok:" + str(best_pokemon))
+                print("best agent:" + str(best_agent_id))
+                self.pokemons_list.remove(best_pokemon)
+                self.agents_list.remove(best_agent)
+                self.pokemon_allocated[best_agent.id] = best_pokemon.pos.__str__()
+                print("update dest >> agent id: {}, value_per_second: {}, next dest: {}".format(best_agent_id,
+                                                                                                best_agent_value_per_second,
+                                                                                                best_agent_next_node))
+                self.client.choose_next_edge(
+                    '{"agent_id":' + str(best_agent_id) + ', "next_node_id":' + str(best_agent_next_node) + '}')
+            self.client.move()
+
+    def IDAN_update_dest_for_agents_by_biggest_value(self):
 
         if self.pokemons_list is None:
             self.client.move()
@@ -166,6 +236,8 @@ class Game:
                 print(3, (self.pokemons_list, self.agents_list))
             self.client.move()
 
+    # def make_move(self):
+
     def update_dest_for_agents_by_tsp(self):
 
         if self.pokemons_list is None:
@@ -209,13 +281,124 @@ class Game:
                         cities = [agent.src] + cities
                         print(cities)
 
-                    nodes_list, distance = self.graphAlgo.TSP(cities)
+                    nodes_list, distance = self.graphAlgo.TSP(cities.copy())
                     print("nodes_list:")
                     print(nodes_list)
                     self.client.choose_next_edge(
                         '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(nodes_list[1]) + '}')
 
             self.client.move()
+
+    def powerset(self, iterable):
+        "powerset([1,2,3]) --> () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)"
+        s = list(iterable)
+        return chain.from_iterable(combinations(s, r) for r in range(1, 5))
+
+    def update_dest_for_agents_by_tsp_test(self):
+
+        if self.pokemons_list is not None:
+
+            #  check!
+            # self.sort_pokemons_by_value()
+
+            # agents_to_remove = []
+            # for pokemon in self.pokemons_list:
+            #     pokemon_src = pokemon.node
+            #     if pokemon_src is None:
+            #         pokemon_src = int(pokemon.edge.split(',')[0])
+            #         pokemon_dest = int(pokemon.edge.split(',')[1])
+            #     for agent in self.agents_list:
+            #         if agent.dest == -1:
+            #             if agent.src == pokemon_src:
+            #                 agents_to_remove.append(agent)
+            #                 self.client.choose_next_edge(
+            #                     '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(
+            #                         pokemon_dest) + '}')
+
+            # for agent in agents_to_remove:
+            #     self.agents_list.remove(agent)
+            pokemon_to_remove = []
+            agents_to_remove = []
+            for agent in self.agents_list:
+                if agent.id in self.agents_waze.keys() and agent.dest == -1:
+                    if len(self.agents_waze[agent.id]) > 1:
+                        self.agents_waze[agent.id].remove(agent.src)
+                        self.client.choose_next_edge(
+                            '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(
+                                self.agents_waze[agent.id][0]) + '}')
+                        agents_to_remove.append(agent)
+
+                        for pokemon in self.pokemons_list:
+                            if pokemon.pos.__str__() in self.pokemon_allocated[agent.id]:
+                                pokemon_to_remove.append(pokemon)
+                                print("yes!!")
+                    else:
+                        del self.agents_waze[agent.id]
+                        del self.pokemon_allocated[agent.id]
+
+            for agent in agents_to_remove:
+                self.agents_list.remove(agent)
+            for pok in pokemon_to_remove:
+                self.pokemons_list.remove(pok)
+
+            for agent in self.agents_list:
+                if agent.dest == -1 and len(self.pokemons_list) > 0:
+
+                    nodes_cities, best_pokemons = self.tsp_best(agent)
+
+                    self.agents_waze[agent.id] = nodes_cities[1:]
+                    # print("nodes_list:")
+                    # print(nodes_list)
+                    self.pokemon_allocated[agent.id] = []
+                    for pok in best_pokemons:
+                        self.pokemons_list.remove(pok)
+                        self.pokemon_allocated[agent.id].append(pok.pos.__str__())
+
+                    self.client.choose_next_edge(
+                        '{"agent_id":' + str(agent.id) + ', "next_node_id":' + str(nodes_cities[1]) + '}')
+
+        self.client.move()
+
+    def tsp_best(self, agent):
+
+        best_value_per_seconds = -1
+        best_pokemons = None
+        best_cities = None
+        print("agent:" + str(agent.id))
+        for pokemons in self.powerset(self.pokemons_list):
+
+            cities = []
+            pokemons_value = 0
+            for pokemon in pokemons:
+
+                pokemons_value += pokemon.value
+                pokemon_src = pokemon.node
+                if pokemon_src is not None:
+                    cities.append(pokemon_src)
+                else:
+                    pokemon_src = int(pokemon.edge.split(',')[0])
+                    pokemon_dest = int(pokemon.edge.split(',')[1])
+                    cities.append(pokemon_src)
+                    cities.append(pokemon_dest)
+                # print(pokemon_src)
+            if cities[0] != agent.src:
+                cities = [agent.src] + cities
+
+            # print("cities:" + str(cities))
+
+            nodes_list, distance = self.graphAlgo.TSP(cities.copy())
+            value_per_seconds = pokemons_value / (distance / agent.speed)
+            if value_per_seconds > best_value_per_seconds:
+                best_value_per_seconds = value_per_seconds
+                best_cities = nodes_list
+                best_pokemons = pokemons
+
+            # print("value: {}, dist: {}, speed: {}, value_per: {}".format(pokemons_value, distance, agent.speed, value_per_seconds))
+
+        print("BEST! value_per: {}".format(value_per_seconds))
+        for p in best_pokemons:
+            print(p.edge.split(',')[0])
+        return best_cities, best_pokemons
 
     def sort_pokemons_by_value(self):
         self.pokemons_list.sort(key=lambda x: x.value, reverse=True)
@@ -228,20 +411,20 @@ class Game:
     #     # complete!
     #     self.client.add_agent("{\"id\":0}")
 
-    def update_dest_for_agents2(self):
+    def GABI_update_dest_for_agents(self):
         usedPokemons = []
         dictNextDest = {}
-        # for pokemon in self.pokemons_list:
-        #     best_agent_id = -1
-        #     best_agent_distance = numpy.Infinity
+
         for agent in self.agents_list:
             if agent.dest == -1:
-                ans = self.findClosestPokemon(agent, usedPokemons)
-                usedPokemons.append(ans[1])
-                dictNextDest[agent.id] = ans[1]
+                nextdest, minimumPokemonId = self.findClosestPokemon(agent, usedPokemons)
+                usedPokemons.append(minimumPokemonId)
+                dictNextDest[agent.id] = nextdest
 
-        for key in dictNextDest.keys():
-            next_node = dictNextDest.get(key)
+        print(dictNextDest)
+
+        for key, next_node in dictNextDest.items():
+            # next_node = dictNextDest.get(key)
             self.client.choose_next_edge(
                 '{"agent_id":' + str(key) + ', "next_node_id":' + str(next_node) + '}')
         ttl = self.client.time_to_end()
@@ -251,18 +434,20 @@ class Game:
         # return dictNextDest
 
     def findClosestPokemon(self, agent, usedPokemons):
-        # dictClosestPokemon = {}
-        # usedPokemons = []
-        # for agent in self.agents_list:
         min = sys.maxsize
         for pokemon in self.pokemons_list:
             if pokemon.id not in usedPokemons:
                 pokemonSrcStr = pokemon.edge.split(',')
-                pokemonSrc = (int)(pokemonSrcStr[0])
-                currDest = self.graphAlgo.shortest_path(agent.src, pokemonSrc)
-                if currDest[0] < min:
-                    nextdest = currDest[1][1]
+                pokemonSrc = int(pokemonSrcStr[0])
+                pokemonDst = int(pokemonSrcStr[1])
+
+                distance, ls = self.graphAlgo.shortest_path(agent.src, pokemonSrc)
+
+                if distance == 0:
+                    return pokemonDst, pokemon.id
+
+                if distance < min:
+                    nextdest = ls[1]
                     minimumPokemonId = pokemon.id
 
-                    # dictClosestPokemon[agent.id] = minList
-                return nextdest, minimumPokemonId
+        return nextdest, minimumPokemonId

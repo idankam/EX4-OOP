@@ -152,7 +152,7 @@ class GraphAlgo(GraphAlgoInterface):
                     prevPointer[nodeNeighbourID] = currNode.id
         return prevPointer
 
-    def get_graph(self) -> GraphInterface:
+    def get_graph(self) -> DiGraph:
         return self.graph
         """
         :return: the directed graph on which the algorithm works on.
@@ -188,32 +188,32 @@ class GraphAlgo(GraphAlgoInterface):
                         endMinWeight = currNode.weight
                         endMinWeightKey = currNode.id
 
-                startMinWeight = sys.maxsize
-                startMinWeightKeyNode = -1
-                for nodeKey in node_lst:
-                    currNode = transpose.graph.Nodes.get(nodeKey)
-                    if currNode.weight < startMinWeight:
-                        startMinWeight = currNode.weight
-                        startMinWeightKeyNode = currNode.id
+                # startMinWeight = sys.maxsize
+                # startMinWeightKeyNode = -1
+                # for nodeKey in node_lst:
+                #     currNode = transpose.graph.Nodes.get(nodeKey)
+                #     if currNode.weight < startMinWeight:
+                #         startMinWeight = currNode.weight
+                #         startMinWeightKeyNode = currNode.id
 
-                if endMinWeight < startMinWeight:
-                    tmpList = self.getPath(dij_original_pointers, ansNodes[-1].id, endMinWeightKey)
-                    del tmpList[0]
-                    for node in tmpList:
-                        ansNodes.append(node)
-                        # totalDist += ansNodes[-2].weight - ansNodes[-1].weight
-                        totalDist += self.graph.Edges[str(ansNodes[-2].id) + "," + str(ansNodes[-1].id)].weight
-                        # totalDist += ansNodes[-1].weight - ansNodes[-2].weight
-                    node_lst.remove(endMinWeightKey)
-                else:
-                    tmpList = transpose.getPath(dij_transpose_pointers, ansNodes[0].id, startMinWeightKeyNode)
-                    del tmpList[0]
-                    for i in range(len(tmpList)):
-                        ansNodes.insert(0, original.graph.Nodes.get(tmpList[i].id))
-                        totalDist += self.graph.Edges[str(ansNodes[0].id) + "," + str(ansNodes[1].id)].weight
-                        # totalDist += ansNodes[0].weight - ansNodes[1].weight
-                        # totalDist += ansNodes[1].weight - ansNodes[0].weight
-                    node_lst.remove(startMinWeightKeyNode)
+                # if endMinWeight < startMinWeight:
+                tmpList = self.getPath(dij_original_pointers, ansNodes[-1].id, endMinWeightKey)
+                del tmpList[0]
+                for node in tmpList:
+                    ansNodes.append(node)
+                    # totalDist += ansNodes[-2].weight - ansNodes[-1].weight
+                    totalDist += self.graph.Edges[str(ansNodes[-2].id) + "," + str(ansNodes[-1].id)].weight
+                    # totalDist += ansNodes[-1].weight - ansNodes[-2].weight
+                node_lst.remove(endMinWeightKey)
+                # else:
+                #     tmpList = transpose.getPath(dij_transpose_pointers, ansNodes[0].id, startMinWeightKeyNode)
+                #     del tmpList[0]
+                #     for i in range(len(tmpList)):
+                #         ansNodes.insert(0, original.graph.Nodes.get(tmpList[i].id))
+                #         totalDist += self.graph.Edges[str(ansNodes[0].id) + "," + str(ansNodes[1].id)].weight
+                #         # totalDist += ansNodes[0].weight - ansNodes[1].weight
+                #         # totalDist += ansNodes[1].weight - ansNodes[0].weight
+                #     node_lst.remove(startMinWeightKeyNode)
                 for nodeId in node_lst:
                     for node in ansNodes:
                         if node.id == nodeId:
