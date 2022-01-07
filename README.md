@@ -1,12 +1,13 @@
 # EX4-OOP
-python implementation for Directed Weighted Graphs and Algorithms
+python implementation for Directed Weighted Graph PokemonGame:
 
-![image](https://user-images.githubusercontent.com/79406881/147505114-0ff881c2-fccb-45fc-9cb5-acd41036d855.png)
+![image](https://user-images.githubusercontent.com/79164312/148466788-586c5e64-c268-4e43-84dd-87af2835a438.png)
 
 
-Graphs and graphs-algorithms explanations:
 
-### Class Edge : This class represents the edges between two nodes , source and destinations in the graph.
+Pkemon Game Explanetion:
+
+### Class Edge : This class represents the edges between two nodes , source and weight in the graph.
 
 ### Class Node : This class represents a Node in the graph. The node holds an id, position, weight, the edges out (from him to another node),the edges in (from another node to him) and a tag.
 
@@ -99,38 +100,56 @@ plot_graph - the function that is calling the Gui to plot the graph.
 nodesListToIntLis -  converting node list to their id wich is int.
 
 
-### Class GraphToDisplay: holds an array of nods and of edges , this class is helping us to save and load to json because any json file holds edges and nodes, this class also help us to represent a node to a json file as we want , therefore holds also a class of NodeToDisplay.
-
 ### Class PriorityQueue: a class that is implementing a priorityQueue which has the functions isEmpty, insert, size, delete. this priorityqueue is giving priority to the node with the minimum weight.To read more about the functions above https://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html
 
 ### Class PlottingRes: this class is plotting and compering our reasults by using matplotlib library between java and paython.
 
+## The get_pokemon_objects - reading a string as json and returning a list of pokemons.
+
+### Class Pokemon : this class represents the pokemons that are on the Graph Each Pokemon has a Value , id , pos(position) and at which adge he is located.
+
+#### Class GraphAlgo functions –
+
+init - a constarctor to the fields we mantioned above.
+
+getEdge - returning the pokemon edge.
+
+getNode - returning the pokemon node.
+
+is_on_edge - returning a boolean value if a node is on a specific edge.
+
+## The get_Agent_objects - reading a string as json and returning a list of pokemons.
+
+### Class Agent - this class represents the Agents that are capturing the Pokemons every Agent has an id , value , src , dest , speed , pos(position).
+
+### client - a class that we got for this task( that we can not change) , this class is creating connection with the server.
+
+### Game class - this Class holds the algorithem to capture as many pokemons as we can.
+
+## Game class functions -
+
+update_game_info - updating the Game information.
+
+add_agents_to_game - adding agents to the start point the agent starts from the center if there are more then one agent they are starting from a random nodes.
+
+update_dest_value_per_second - this is our main function for the capturing the pokemons , basiclly this function is calculeting the worthes Pokemon to got to by calculating the value of the distance (using dijakstra algorithem) and the agent speed and sending the agent to fetch him.
+
+### Ex4 - this class is the class where the Gui is located , this class is also by while loop updating the screen for the game long. more explanations and description about the GUI below.
+
+
+
 ## GUI explanations:
 
-After loading the graph there is a screen that we created by using pygame.
+while starting the game you will see immediately the screen.
 
-In this screen we have several options that we created in the bar , by using buttons.
+![image](https://user-images.githubusercontent.com/79164312/148466788-586c5e64-c268-4e43-84dd-87af2835a438.png)
 
-<img width="140" alt="image" src="https://user-images.githubusercontent.com/79164312/147508868-dc25ce8f-e148-433a-8037-94018bef01a2.png">
+The pokemons are pectures of diffarent pokemons and the back round is pokemons backround Game as you cab see below.
 
-Center – by pressing the center button the center will be painted with a green circle.
+<img width="637" alt="Untitled" src="https://user-images.githubusercontent.com/79164312/148469507-0e4a39ed-759e-4f07-bbc4-b62f08fe53e8.png">
 
-<img width="644" alt="image" src="https://user-images.githubusercontent.com/79164312/147508937-dc2e9d69-7038-42cb-925f-a7b24a757e22.png">
+The Agent is a pokemon trainer Which is "throwing" the pokeball while close enagh an "catching" the pokemons , NOTE: he is catching a pokemon only while on the "rigth diraction , if he is on the opposite edge althgh he is passing the same location he will not "throw the ball". exampel on the black circles for fetching the pokemon.
 
-Tsp = by pressing the tsp button  a second screen will be open and you will be requested to insert the node list, after that it will draw the rout on the graph.
+![image](https://user-images.githubusercontent.com/79164312/148466788-586c5e64-c268-4e43-84dd-87af2835a438.png)
 
-<img width="320" alt="image" src="https://user-images.githubusercontent.com/79164312/147509005-7f90a285-4ebb-4f94-b35c-e6df5ad10602.png">
-
-Shortest - by pressing the shortest button  a second screen will be open and you will be requested to insert the two nodes,fter that it will draw the rout on the graph.
-
-<img width="251" alt="image" src="https://user-images.githubusercontent.com/79164312/147509066-88570125-37b4-41d2-bb5b-3e05b3dc6e9c.png">
-
-### We did it by building 2 classes:
-
-graph_gui – this is the class which is showing the screen , normalizing the graph and drawing the graph and the buttons and the lines.
-
-gui input – this class is showing the input screen which by using him we are getting the nodes to use the tsp or the shortest path algorithems.
-
-<img width="478" alt="image" src="https://user-images.githubusercontent.com/79164312/147509354-5771ed2d-c046-49e8-ba84-ebab22b3e29a.png">
-
-NOTE : we also added a function that while searching the shortest path between the nodes(while running shortest path algorithm or tsp) we drawing the path and showing the weight of the edge. This is happening also when we are adding an edge. We also showing the node while adding it and the center while searching it.
+### We did it by using our calculations for dist putting and locating the pokemons and the agents on the right placec on the graph , scalling , and calculating the wright diractions for the pokemons.
