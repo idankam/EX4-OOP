@@ -1,5 +1,5 @@
 # EX4-OOP
-python implementation for Directed Weighted Graph PokemonGame:
+python implementation for Directed Weighted Graph Pokemon Game:
 
 ![image](https://user-images.githubusercontent.com/79164312/148466788-586c5e64-c268-4e43-84dd-87af2835a438.png)
 
