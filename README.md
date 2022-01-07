@@ -102,7 +102,9 @@ nodesListToIntLis -  converting node list to their id wich is int.
 
 ### Class PriorityQueue: a class that is implementing a priorityQueue which has the functions isEmpty, insert, size, delete. this priorityqueue is giving priority to the node with the minimum weight.To read more about the functions above https://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html
 
-### Class PlottingRes: this class is plotting and compering our reasults by using matplotlib library between java and paython.
+### Class TestDiGraph: for Testing the Graph.
+
+### Class TestDiGraphAlgos: for Testing the Graph Algorithems.
 
 ## The get_pokemon_objects - reading a string as json and returning a list of pokemons.
 
@@ -150,6 +152,6 @@ The pokemons are pectures of diffarent pokemons and the back round is pokemons b
 
 The Agent is a pokemon trainer Which is "throwing" the pokeball while close enagh an "catching" the pokemons , NOTE: he is catching a pokemon only while on the "rigth diraction , if he is on the opposite edge althgh he is passing the same location he will not "throw the ball". exampel on the black circles for fetching the pokemon.
 
-![image](https://user-images.githubusercontent.com/79164312/148466788-586c5e64-c268-4e43-84dd-87af2835a438.png)
+<img width="637" alt="Untitled" src="https://user-images.githubusercontent.com/79164312/148470454-0de76270-97f8-417f-95f5-9183de2c9761.png">
 
 ### We did it by using our calculations for dist putting and locating the pokemons and the agents on the right placec on the graph , scalling , and calculating the wright diractions for the pokemons.
