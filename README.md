@@ -1,4 +1,9 @@
 # EX4-OOP
+
+https://www.awesomescreenshot.com/video/6740918?key=3c7e51ec6577abd88227438f6eabda0a
+
+
+
 python implementation for Directed Weighted Graph Pokemon Game:
 
 ![image](https://user-images.githubusercontent.com/79164312/148466788-586c5e64-c268-4e43-84dd-87af2835a438.png)
