@@ -1,5 +1,11 @@
 # EX4-OOP
 
+# How to run this project?
+1. clone the project.
+2. run the command: "java -jar Ex4_Server_v0.0.jar n" (n is a number between 0-15)
+3. run the command: "cd src" (to enter the correct folder)
+4. run the command: python Ex4.py
+
 ## This is a Short clip: 
 
 
@@ -14,7 +20,7 @@ python implementation for Directed Weighted Graph Pokemon Game:
 
 
 
-Pkemon Game Explanetion:
+# Pokemon Game Explanetion:
 
 ### Class Edge : This class represents the edges between two nodes , source and weight in the graph.
 
