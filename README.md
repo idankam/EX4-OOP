@@ -1,13 +1,19 @@
 # EX4-OOP
 
-# How to run this project?
+# How to run this project (option 1)?
 1. clone the project.
-2. run the command: "java -jar Ex4_Server_v0.0.jar n" (n is a number between 0-15)
-3. run the command: "cd src" (to enter the correct folder)
-4. run the command: python Ex4.py
+2. run the command: "java -jar Ex4_Server_v0.0.jar n" (n is a number between 0-15).
+3. run the command: "cd src" (to enter the correct folder).
+4. run the command: python Ex4.py.
+
+# How to run this probect (option 2)?
+1. download "Ex4" _release file_.
+2. unzip the file.
+3. enter to ex4 folder - run the command: "cd Ex4".
+4. run the command: "java -jar Ex4_Server_v0.0.jar n" (n is a number between 0-15)
+5. run Ex4.file.
 
 ## This is a Short clip: 
-
 
 
 https://user-images.githubusercontent.com/79164312/148529720-51ede0c4-4330-4beb-b369-e0f6c4e743c4.mp4
