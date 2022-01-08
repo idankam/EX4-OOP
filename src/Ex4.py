@@ -87,7 +87,7 @@ def run():
                 pygame.quit()
                 exit(0)
 
-        pBackRound = pygame.image.load('../images/pokemon.png')
+        pBackRound = pygame.image.load('./images/pokemon.png')
         pBackRound = pygame.transform.scale(pBackRound, (window_width, window_height*1.6))
         # refresh surface1080, 720
         screen.fill(Color(0, 0, 0))
@@ -125,10 +125,10 @@ def run():
             pygame.draw.line(screen, Color(255, 255, 51),
                              (src_x, src_y), (dest_x, dest_y))
 
-        pokeball = pygame.image.load('../images/pokeball.png')
+        pokeball = pygame.image.load('./images/pokeball.png')
         pokeball = pygame.transform.scale(pokeball, (38, 30))
 
-        pokeTrainer = pygame.image.load('../images/pokemon-trainer.png')
+        pokeTrainer = pygame.image.load('./images/pokemon-trainer.png')
         pokeTrainer = pygame.transform.scale(pokeTrainer, (50, 40))
 
         # draw agents
@@ -139,22 +139,22 @@ def run():
 
         listDrawPokemons = []
 
-        pikachu = pygame.image.load('../images/pikachu.png')
+        pikachu = pygame.image.load('./images/pikachu.png')
         pikachu = pygame.transform.scale(pikachu, (43, 36))
 
         listDrawPokemons.append(pikachu)
 
-        bullbasaur = pygame.image.load('../images/bullbasaur.png')
+        bullbasaur = pygame.image.load('./images/bullbasaur.png')
         bullbasaur = pygame.transform.scale(bullbasaur, (43, 36))
 
         listDrawPokemons.append(bullbasaur)
 
-        snorlax = pygame.image.load('../images/snorlax.png')
+        snorlax = pygame.image.load('./images/snorlax.png')
         snorlax = pygame.transform.scale(snorlax, (43, 36))
 
         listDrawPokemons.append(snorlax)
 
-        charmander = pygame.image.load('../images/charmander.png')
+        charmander = pygame.image.load('./images/charmander.png')
         charmander = pygame.transform.scale(charmander, (43, 36))
 
         listDrawPokemons.append(charmander)
