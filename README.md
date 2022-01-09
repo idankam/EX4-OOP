@@ -1,12 +1,12 @@
 # EX4-OOP
 
-# How to run this project (option 1)?
+# How to run this project? _option 1:_
 1. clone the project.
 2. run the command: "java -jar Ex4_Server_v0.0.jar n" (n is a number between 0-15).
 3. run the command: "cd src" (to enter the correct folder).
 4. run the command: python Ex4.py.
 
-# How to run this probect (option 2)?
+# How to run this project? _option 2:_
 1. download "Ex4" _release file_.
 2. unzip the file.
 3. enter to ex4 folder - run the command: "cd Ex4".
@@ -176,3 +176,5 @@ The Agent is a pokemon trainer Which is "throwing" the pokeball while close enag
 <img width="637" alt="Untitled" src="https://user-images.githubusercontent.com/79164312/148470454-0de76270-97f8-417f-95f5-9183de2c9761.png">
 
 ### We did it by using our calculations for dist putting and locating the pokemons and the agents on the right placec on the graph , scalling , and calculating the wright diractions for the pokemons.
+
+# Result Report and more information in the WIKI project - https://github.com/idankam/EX4-OOP/wiki
